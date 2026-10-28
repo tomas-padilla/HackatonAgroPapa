@@ -1,0 +1,63 @@
+Organizacion PAPA
+Hay varias opciones para tomar como planes de accion para avanzar con el conteo de plantas de papa por imagen, pero son minimas variantes a un mismo pipeline de procesamiento.
+
+OPCION 1
+AUTOROTACION DE IMAGENES (HOUGH) -> EXTRACCION CON OTSU -> FILTRO DE SURCO -> LISTA DE COORDENADAS  
+
+OPCION 2
+AUTOROTACION DE IMAGENES (HOUGH) -> DETECTOR DE BLOBS -> FILTRO DE SURCO -> LISTA DE COORDENADAS
+
+OPCION 3
+PCA -> EXTRACCION CON OTSU -> FILTRO DE SURCO -> LISTA DE COORDENADAS  
+
+OPCION 4
+PCA -> DETECTOR DE BLOBS -> FILTRO DE SURCO -> LISTA DE COORDENADAS
+
+
+Pros / Contras 
+- PCA es mas complejo ya que requiere utilizar calculos vectoriales pero a su vez es mas rapido ya que evita tener que rotar las imagenes
+- La rotacion de las imagenes implica un paso adicional por lo que lo hace algo mas lento pero tambien es mucho mas sencillo de implementar
+
+- OTSU es mas rápido y sencillo pero a diferencia de  Blob no tiene la capacidad de detectar formas.
+
+
+
+Voy a tomar la  decision de implementar la opcion 1 ya que me parece la mas facil de prototipar, ademas de que es acorde a lo pedido.
+
+
+Luego de varios intentos se modifico el pipeline para terminar llegando a 
+
+Imagen TIFF/NIR
+    |
+    v
+Carga en escala de grises
+    |
+    v
+Corrección de orientación con Hough
+    |
+    v
+Imagen rotada
+    |
+    v
+CLAHE (Normaliza el contraste de la imagen)
+    |
+    v
+Desenfoque Gaussiano 7x7 (Elimina el ruido y los puntos diminutos del suelo)
+    |
+    v
+Recorte virtual de bordes de 40 px
+    |
+    v
+Detección de máximos locales
+    |
+    v
+Coordenadas candidatas (x, y)
+    |
+    v
+Construcción de pasillos verticales
+    |
+    v
+Eliminación de puntos fuera de los surcos
+    |
+    v
+Lista final de plantas válidas
